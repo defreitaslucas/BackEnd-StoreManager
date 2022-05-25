@@ -7,9 +7,13 @@ const getAll = async () => {
 };
 
 const getProductById = async (id) => {
-  const query = ('SELECT * FROM products WHERE id=?', [id]);
-  const [result] = await connection.execute(query);
-  return result;
+  const query = ('SELECT * FROM products WHERE id=?');
+  const [result] = await connection.execute(query, [id]);
+  return result.map((product) => ({
+    id: product.id,
+    name: product.name,
+    quantity: product.quantity,
+  }));
 };
 
 module.exports = {

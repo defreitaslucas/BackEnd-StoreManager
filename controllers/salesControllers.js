@@ -5,7 +5,7 @@ const salesServices = require('../services/salesServices');
 
 router.get('/', async (req, res) => {
   try {
-    const result = await salesServices.getProducts();
+    const result = await salesServices.getAllSales();
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await salesServices.getProducts(id);
+    const result = await salesServices.getSales(id);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
