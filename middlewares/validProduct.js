@@ -6,14 +6,14 @@ const productsObjValid = Joi.object({
 });
 
 const validateProductsMiddleware = (req, res, next) => {
-  const { error } = productsObjValid.validate(req.body, { abortEarly: false });
+  const { error } = productsObjValid.validate(req.body);
   if (error) {    
     if (error.details[0].type === 'number.min' || error.details[0].type === 'string.min') {
       const messages = error.details.map((e) => e.message);
       return res.status(422).json({ message: messages[0] });
     } 
     const messages = error.details.map((e) => e.message);
-    res.status(400).json({ message: messages[0] });
+    return res.status(400).json({ message: messages[0] });
   }
   next();
 };
