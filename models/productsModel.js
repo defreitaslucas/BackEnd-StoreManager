@@ -7,7 +7,7 @@ const getAll = async () => {
 };
 
 const getProductById = async (id) => {
-  const query = ('SELECT * FROM products WHERE id=?');
+  const query = ('SELECT * FROM products WHERE id=?;');
   const [result] = await connection.execute(query, [id]);
   return result.map((product) => ({
     id: product.id,
@@ -17,19 +17,21 @@ const getProductById = async (id) => {
 };
 
 const createProducts = async (name, quantity) => {
-  const query = ('INSERT INTO products (name, quantity) VALUES (?, ?)');
+  const query = ('INSERT INTO products (name, quantity) VALUES (?, ?);');
   const [product] = await connection.execute(query, [name, quantity]);
 
-  const newProduct = {
-    id: product.insertId,
-    name,
-    quantity,
-  };
-  return newProduct;
+  return product.insertId;
+};
+
+const updateProducts = async (name, quantity, id) => {
+  const query = ('UPDATE products SET name = ?, quantity = ? WHERE id = ?;');
+  const [result] = await connection.execute(query, [name, quantity, id]);
+  return result;
 };
 
 module.exports = {
   getAll,
   getProductById,
   createProducts,
+  updateProducts,
 };

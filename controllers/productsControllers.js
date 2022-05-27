@@ -16,18 +16,21 @@ const getProducts = async (req, res) => {
     res.status(200).json(result[0]);
 };
 
-const createProducts = async (_req, _res) => {
-  // const { name, quantity } = req.body;
-  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
-  // if (!newProduct) return res.status(code).json({ message });
-  // res.status(code).json(newProduct);
+const createProducts = async (req, res) => {
+  const { name, quantity } = req.body;
+  const newProduct = await productsServices.createProducts(name, quantity);
+  if (newProduct.message) return res.status(newProduct.code).json({ message: newProduct.message });
+  res.status(201).json(newProduct);
 };
 
-const updateProducts = async (_req, _res) => {
-  // const { name, quantity } = req.body;
-  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
-  // if (!newProduct) return res.status(code).json({ message });
-  // res.status(code).json(newProduct);
+const updateProducts = async (req, res) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  const response = await productsServices.updateProducts(name, quantity, id);
+  if (response.message) {
+    return res.status(response.code).json({ message: response.message });
+  }
+  return res.status(200).json(response);
 };
 
 module.exports = {

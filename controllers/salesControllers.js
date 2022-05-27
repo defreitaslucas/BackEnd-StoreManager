@@ -18,9 +18,9 @@ const getSales = async (req, res) => {
 
 const createSale = async (_req, _res) => {
   // const { name, quantity } = req.body;
-  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
-  // if (!newProduct) return res.status(code).json({ message });
-  // res.status(code).json(newProduct);
+  // const newSale = await salesServices.createSale(name, quantity);
+  // if (newSale.message) return res.status(newSale.code).json({ message: newSale.message });
+  // res.status(201).json(newSale);
 };
 
 const updateSales = async (_req, _res) => {

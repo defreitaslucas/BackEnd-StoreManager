@@ -21,12 +21,21 @@ const createProducts = async (name, quantity) => {
   const verificaProduct = products.find((product) => product.name === name);
   if (verificaProduct) return { code: 409, message: 'Product already exists' };
 
-  const product = await productsModels.createProducts(name, quantity);
-  return { code: 201, product };
+  const id = await productsModels.createProducts(name, quantity);
+  return { id, name, quantity };
+};
+
+const updateProducts = async (name, quantity, id) => {
+  const verificaProduct = await getProducts(id);
+  if (verificaProduct.message) return { code: 404, message: 'Product not found' };
+
+  const product = await productsModels.updateProducts(name, quantity, id);
+  if (product.affectedRows === 1) { return { name, quantity, id }; }
 };
 
 module.exports = {
   getAllProducts,
   getProducts,
   createProducts,
+  updateProducts,
 };
