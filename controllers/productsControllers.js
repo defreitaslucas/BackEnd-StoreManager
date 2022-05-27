@@ -10,25 +10,29 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProducts = async (req, res) => {
-  try {
     const { id } = req.params;
     const result = await productsServices.getProducts(id);
+    if (result.message) return res.status(result.code).json({ message: result.message });
     res.status(200).json(result[0]);
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({ message: 'Product not found' });
-  }
 };
 
-const createProducts = async (req, res) => {
-  const { name, quantity } = req.body;
-  const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
-  if (!newProduct) return res.status(code).json({ message });
-  res.status(code).json(newProduct);
+const createProducts = async (_req, _res) => {
+  // const { name, quantity } = req.body;
+  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
+  // if (!newProduct) return res.status(code).json({ message });
+  // res.status(code).json(newProduct);
+};
+
+const updateProducts = async (_req, _res) => {
+  // const { name, quantity } = req.body;
+  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
+  // if (!newProduct) return res.status(code).json({ message });
+  // res.status(code).json(newProduct);
 };
 
 module.exports = {
   getAllProducts,
   getProducts,
   createProducts,
+  updateProducts,
 };

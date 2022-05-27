@@ -10,17 +10,29 @@ const getAllSales = async (req, res) => {
 };
 
 const getSales = async (req, res) => {
-  try {
     const { id } = req.params;
     const result = await salesServices.getSales(id);
+    if (result.message) return res.status(result.code).json({ message: result.message });
     res.status(200).json(result);
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({ message: 'Sale not found' });
-  }
+};
+
+const createSale = async (_req, _res) => {
+  // const { name, quantity } = req.body;
+  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
+  // if (!newProduct) return res.status(code).json({ message });
+  // res.status(code).json(newProduct);
+};
+
+const updateSales = async (_req, _res) => {
+  // const { name, quantity } = req.body;
+  // const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
+  // if (!newProduct) return res.status(code).json({ message });
+  // res.status(code).json(newProduct);
 };
 
 module.exports = {
   getAllSales,
   getSales,
+  createSale,
+  updateSales,
 };

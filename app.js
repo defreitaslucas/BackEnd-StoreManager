@@ -19,6 +19,10 @@ app.get('/sales', salesController.getAllSales);
 app.get('/sales/:id', salesController.getSales);
 
 app.post('/products', middlewares.validateProductsMiddleware, productsController.createProducts);
+app.post('/sales', middlewares.validateSaleMiddleware, salesController.createSale);
+
+app.put('/products/:id', middlewares.validateProductsMiddleware, productsController.updateProducts);
+app.put('/sales/:id', middlewares.validateSaleMiddleware, salesController.updateSales);
 // app.post('/sales', palesController.);
 
 app.use(middlewares.middlewareErrors);

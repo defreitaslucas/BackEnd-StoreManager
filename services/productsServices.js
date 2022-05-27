@@ -7,7 +7,12 @@ const getAllProducts = async () => {
 
 const getProducts = async (id = null) => {
   const response = await productsModels.getProductById(id);
-  if (!response.length) throw Error(400, 'Product not found');
+  if (response.length === 0) {
+ return {
+    code: 404,
+    message: 'Product not found',
+  }; 
+}
   return response;
 };
 

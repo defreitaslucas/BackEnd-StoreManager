@@ -7,7 +7,12 @@ const getAllSales = async () => {
 
 const getSales = async (id = null) => {
   const response = await salesModels.getSalesById(id);
-  if (!response.length) throw Error(400, 'Sales not found');
+  if (response.length === 0) {
+ return {
+    code: 404,
+    message: 'Sale not found',
+  }; 
+}
   return response;
 };
 
