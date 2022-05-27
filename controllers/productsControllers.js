@@ -1,19 +1,15 @@
-const express = require('express');
-
-const router = express.Router();
 const productsServices = require('../services/productsServices');
-const middlewares = require('../middlewares');
 
-router.get('/', async (req, res) => {
+const getAllProducts = async (req, res) => {
   try {
     const result = await productsServices.getAllProducts();
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
   }
-});
+};
 
-router.get('/:id', async (req, res) => {
+const getProducts = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await productsServices.getProducts(id);
@@ -22,17 +18,17 @@ router.get('/:id', async (req, res) => {
     console.log(err);
     res.status(404).json({ message: 'Product not found' });
   }
-});
+};
 
-router.post('/products', middlewares.validateProductsMiddleware, async (req, res) => {
-  try {
-    const { name, quantity } = req.body;
-    const result = await productsServices.create({ name, quantity });
-    res.status(201).json(result);
-  } catch (err) {
-    console.log(err);
-    res.status(409).json({ message: 'Product already exists' });
-  }
-});
+const createProducts = async (req, res) => {
+  const { name, quantity } = req.body;
+  const { code, message, newProduct } = await productsServices.createProducts(name, quantity);
+  if (!newProduct) return res.status(code).json({ message });
+  res.status(code).json(newProduct);
+};
 
-module.exports = router;
+module.exports = {
+  getAllProducts,
+  getProducts,
+  createProducts,
+};
