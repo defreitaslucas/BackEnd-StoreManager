@@ -40,8 +40,14 @@ const createSale = async (sales) => {
   return id;
 };
 
+const deleteSales = async (id) => {
+  const query = ('DELETE FROM sales_products WHERE sale_id = ?');
+  return connection.execute(query, [id]);
+};
+
 module.exports = {
   getAll,
   getSalesById,
   createSale,
+  deleteSales,
 };

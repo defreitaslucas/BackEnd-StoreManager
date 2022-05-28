@@ -26,6 +26,7 @@ app.put('/sales/:id', middlewares.validateSaleMiddleware, salesController.update
 // app.post('/sales', palesController.);
 
 app.delete('/products/:id', productsController.deleteProducts);
+app.delete('/sales/:id', salesController.deleteSales);
 
 app.use(middlewares.middlewareErrors);
 
