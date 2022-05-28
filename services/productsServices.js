@@ -33,9 +33,18 @@ const updateProducts = async (name, quantity, id) => {
   if (product.affectedRows === 1) { return { name, quantity, id }; }
 };
 
+const deleteProducts = async (id) => {
+  const getProduct = await getProducts(id);
+  if (getProduct.message) return { code: 404, message: 'Product not found' };
+
+  const product = await productsModels.deleteProducts(id);
+  return product;
+};
+
 module.exports = {
   getAllProducts,
   getProducts,
   createProducts,
   updateProducts,
+  deleteProducts,
 };

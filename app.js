@@ -25,6 +25,8 @@ app.put('/products/:id', middlewares.validateProductsMiddleware, productsControl
 app.put('/sales/:id', middlewares.validateSaleMiddleware, salesController.updateSales);
 // app.post('/sales', palesController.);
 
+app.delete('/products/:id', productsController.deleteProducts);
+
 app.use(middlewares.middlewareErrors);
 
 // não remova essa exportação, é para o avaliador funcionar
