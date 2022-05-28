@@ -16,11 +16,10 @@ const getSales = async (req, res) => {
     res.status(200).json(result);
 };
 
-const createSale = async (_req, _res) => {
-  // const { name, quantity } = req.body;
-  // const newSale = await salesServices.createSale(name, quantity);
-  // if (newSale.message) return res.status(newSale.code).json({ message: newSale.message });
-  // res.status(201).json(newSale);
+const createSale = async (req, res) => {
+  const sale = req.body;
+  const newSale = await salesServices.createSale(sale);
+  res.status(201).json(newSale);
 };
 
 const updateSales = async (_req, _res) => {

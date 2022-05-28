@@ -16,7 +16,16 @@ const getSales = async (id = null) => {
   return response;
 };
 
+const createSale = async (sale) => {
+  const id = await salesModels.createSale(sale);
+  return {
+    id,
+    itemsSold: sale,
+  };
+};
+
 module.exports = {
   getAllSales,
   getSales,
+  createSale,
 };
