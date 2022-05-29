@@ -1,55 +1,82 @@
-// const { expect } = require('chai');
-// const sinon = require('sinon');
-// const salesModel = require('../../../models/salesModel');
-// const connection = require('../../../models/connection');
+const sinon = require('sinon');
+const {expect} = require ('chai');
+const connection = require ('../../../models/connection');
+const salesModel = require('../../../models/salesModel')
 
-// describe('Models getAll sales', () => {
-//   describe('Funcao getAll', () => {
-//     const db = [
-//       {
-//         "saleId": 1,
-//         "date": "2021-04-05T04:54:29.000Z",
-//         "productId": 1,
-//         "quantity": 2
-//       },
-//       {
-//         "saleId": 1,
-//         "date": "2021-04-05T04:54:54.000Z",
-//         "productId": 2,
-//         "quantity": 2
-//       }
-//     ]
+describe('Lista todas as vendas', () => {
+  describe('Lista todas as vendas', () => {
+    before(() => {
+      const execute = [{saleId: 1,
+      date: "2022-04-05T14:05:00.000Z",
+      quantity: 2,
+      productId: 1}];
 
-//     before(() => {
-//       sinon.stub(connection, 'execute').resolves([db]);
-//     });
+      sinon.stub(connection, 'execute').resolves(execute)
+    });
+    after(() => {
+      connection.execute.restore();
+    })
 
-//     after(() => {
-//       connection.execute.restore();
-//     });
+    it('retorna a venda', async() => {
+      const response = await salesModel.getAll();
+      expect(response).to.be.an('array');
+      expect(response).to.not.be.empty;
+    })
+  })
+})
 
-//     it('Retorna sales', async () => {
-//       const received  = await salesModel.getAll();
+describe('lista a venda por id', () => {
+  describe('Lista a venda', () => {
+    before(() => {
+      const execute = [{
+        saleId: 1,
+        date: "2022-04-05T14:05:00.000Z",
+        quantity: 2,
+        productId: 1
+      }];
 
-//       expect(received).to.be.deep.equal(db);
-//     })
-//   })
+      sinon.stub(connection, 'execute').resolves(execute)
+    });
+    after(() => {
+      connection.execute.restore();
+    })
 
-//   describe('Testa getSalesById', () => {
-//     const db = []
+    it('retorna a venda', async() => {
+      const response = await salesModel.getSalesById();
+      expect(response).to.be.an('array');
+      expect(response).to.not.be.empty;
+    })
+  })
+})
+describe('cria venda no banco', () => {
+  before(async () => {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+  });
 
-//     before(() => {
-//       sinon.stub(connection, 'execute').resolves([db]);
-//     });
+  after(async () => {
+    connection.execute.restore();
+  });
+  it('venda criada com sucesso', async () => {
+    const result = await salesModel.createSale(1, 1, 10);
 
-//     after(() => {
-//       connection.execute.restore();
-//     });
+    expect(result).to.be.an('object');
+    expect(result.affectedRows).to.equal(1);
+  });
+});
 
-//     it('Retorna array vazio', async () => {
-//       const received  = await salesModel.getSalesById(100);
+describe('deletar uma venda no banco', () => {
+  before(() => {
+    const execute = [[{affectedRows: 1}]];
 
-//       expect(received).to.be.deep.equal([]);
-//     })
-//   })
-// });
+    sinon.stub(connection, 'execute').resolves(execute)
+  });
+  after(() => {
+    connection.execute.restore();
+  })
+  it('venda deletada com sucesso', async() => {
+    const [response] = await salesModel.deleteSales(1);
+    expect(response).to.be.an('array');
+    expect(response).to.not.be.empty;
+  })
+
+}) 

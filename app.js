@@ -22,8 +22,7 @@ app.post('/products', middlewares.validateProductsMiddleware, productsController
 app.post('/sales', middlewares.validateSaleMiddleware, salesController.createSale);
 
 app.put('/products/:id', middlewares.validateProductsMiddleware, productsController.updateProducts);
-app.put('/sales/:id', middlewares.validateSaleMiddleware, salesController.updateSales);
-// app.post('/sales', palesController.);
+app.put('/sales/:id', middlewares.validateSaleMiddleware, salesController.updateSale);
 
 app.delete('/products/:id', productsController.deleteProducts);
 app.delete('/sales/:id', salesController.deleteSales);

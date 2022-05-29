@@ -1,108 +1,92 @@
-// const { expect } = require('chai');
-// const sinon = require('sinon');
-// const salesServices = require('../../../services/salesServices');
-// const salesControllers = require('../../../controllers/salesControllers');
+const sinon = require('sinon');
+const {expect} = require ('chai');
+const salesController = require('../../../controllers/salesControllers')
+const salesService = require('../../../services/salesServices');
+const res = {}
+const req = {}
 
-// describe('Testando controle sales getAllSales', () => {
-//   const req = {};
-//   const res = {};
+describe('lista todas as vendas', () => {
+  describe('lista todas as vendas', () => {
 
-//   const mocka = [
-//     {
-//       saleId: 1,
-//       date: '2022-07-05T17:18:00.000Z',
-//       productId: 1,
-//       quantity: 10
-//     },
-//     {
-//       saleId: 1,
-//       date: '2022-07-05T17:18:00.000Z',
-//       productId: 2,
-//       quantity: 5
-//     },
-//     {
-//       saleId: 2,
-//       date: '2022-07-05T17:18:00.000Z',
-//       productId: 3,
-//       quantity: 2
-//     }
-//   ]
+    before(() => {
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
 
-//   before(() => {
-//     res.status = sinon.stub().returns(res);
-//     res.json = sinon.stub().returns();
+      sinon.stub(salesService, 'getAllSales').resolves([
+        {
+          "id": 1,
+          "name": "Martelo de Thor",
+          "quantity": 10
+        },
+        {
+          "id": 2,
+          "name": "Traje de encolhimento",
+          "quantity": 20
+        }
+      ])
+    });
+    after(() => {
+      salesService.getAllSales.restore();
+    })
 
-//     sinon.stub(salesServices, 'getAllSales').resolves(mocka);
-//   });
+    it('é chamando o status 200 com um array como resposta ', async() => {
+      await salesController.getAllSales(req, res);
+      expect(res.status.calledWith(200)).to.be.equal(true); 
+      expect(res.json.calledWith(sinon.match.array)).to.be.equal(true);
+    })
+  })
+})
 
-//   after(() => {
-//     salesServices.getAllSales.restore();
-//   })
+describe(' lista vendas por id', () => {
+  describe('uma ou mais vendas sao encontradas', () => {
 
-//   it('getAllSales retorna status 200 quando sucesso, e json', async () => {
-//     await salesControllers.getAllSales(req, res);
+    before(() => {
+      req.params = { id:1}
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns()
 
-//     expect(res.status.calledWith(200)).to.be.true;
-//     expect(res.json.calledWith(mocka)).to.be.true;
-//   })
-// });
+      sinon.stub(salesService, 'getSales').resolves([[
+        {
+          "date": "2022-05-27T18:18:08.000Z",
+          "quantity": 5,
+          "productId": 1
+        },
+        {
+          "date": "2022-05-27T18:18:08.000Z",
+          "quantity": 10,
+          "productId": 2
+        }
+      ]])
+    })
 
-// describe('Testando getSales', () => {
-//   const req = {
-//     params: { id: 1 },
-//   };
-//   const res = {};
+    after(() => {
+      salesService.getSales.restore()
+    })
 
-//   const mocka = [
-//     { date: '2022-07-05T17:18:00.000Z', productId: 1, quantity: 2 },
-//     { date: '2022-07-05T17:18:00.000Z', productId: 2, quantity: 8 }
-//   ]
+    it('é chamado status 200 com um array no json', async() => {
+      await salesController.getSales(req, res);
+      expect(res.status.calledWith(200)).to.be.equal(true);
+      expect(res.json.calledWith(sinon.match.array)).to.be.equal(true);
+    })
+  })
 
-//   before(() => {
-//     res.status = sinon.stub().returns(res);
-//     res.json = sinon.stub().returns();
+  describe('quando nao ha vendas', () => {
+    before(() => {
+      req.params = { id:999 }
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns()
 
-//     sinon.stub(salesServices, 'getSales').resolves(mocka);
-//   });
+      sinon.stub(salesService, 'getSales').resolves({ code: 404, message: `Product not found` })
+    })
 
-//   after(() => {
-//     salesServices.getSales.restore();
-//   })
+    after(() => {
+      salesService.getSales.restore()
+    })
 
-//   it('getSales retorna status 200 quando sucesso, e json', async () => {
-//     await salesControllers.getSales(req, res);
-
-//     expect(res.status.calledWith(200)).to.be.true;
-//     expect(res.json.calledWith(mocka)).to.be.true;
-//   })
-// });
-
-// describe('Testando getSales', () => {
-//   const req = {
-//     params: { id: 1 },
-//   };
-//   const res = {};
-
-//   const mocka = {
-//     statusCode: 404,
-//     message: 'Sale not found',
-//   }
-
-//   before(() => {
-//     res.status = sinon.stub().returns(res);
-//     res.json = sinon.stub().returns();
-
-//     sinon.stub(salesServices, 'getSales').resolves(mocka);
-//   });
-
-//   after(() => {
-//     salesServices.getSales.restore();
-//   })
-
-//   it('Quando nao encontrado getSales Retorna object not found', async () => {
-//     await salesControllers.getSales(req, res);
-
-//     expect(res.status.calledWith(404)).to.be.true;
-//     expect(res.json.calledWith({ message: 'Sale not found' })).to.be.true;
-//   })
-// });
+    it('mensagem de erro', async() => {
+      await salesController.getSales(req, res);
+      expect(res.status.calledWith(404)).to.be.equal(true);
+      expect(res.json.calledWith(sinon.match.object)).to.be.equal(true);
+    })
+  })
+})

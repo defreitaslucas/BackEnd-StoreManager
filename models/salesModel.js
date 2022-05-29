@@ -40,6 +40,27 @@ const createSale = async (sales) => {
   return id;
 };
 
+const updateSale = async (saleId, productId, quantity) => {
+  const query = 'UPDATE StoreManager.sales SET date = now() WHERE id = ?;';
+
+  const [{ affectedRows }] = await connection.execute(query, [saleId]);
+
+  if (affectedRows === 0) {
+    return { statusCode: 404, message: 'Sale not found' };
+  }
+
+  const querySp = `UPDATE StoreManager.sales_products SET product_id = ?, quantity = ?
+  WHERE sale_id = ?;`;
+
+  try {
+    await connection.execute(querySp, [productId, quantity, saleId]);
+  } catch (error) {
+    return { statusCode: 404, message: 'Product not found' };
+  }
+
+  return { saleId };
+};
+
 const deleteSales = async (id) => {
   const query = ('DELETE FROM sales_products WHERE sale_id = ?');
   return connection.execute(query, [id]);
@@ -50,4 +71,5 @@ module.exports = {
   getSalesById,
   createSale,
   deleteSales,
+  updateSale,
 };
