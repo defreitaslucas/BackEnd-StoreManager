@@ -2,7 +2,7 @@ const express = require('express');
 
 const productsController = require('./controllers/productsControllers');
 const salesController = require('./controllers/salesControllers');
-const middlewares = require('./middlewares');
+const middlewares = require('./middlewares/index');
 
 const app = express();
 app.use(express.json());

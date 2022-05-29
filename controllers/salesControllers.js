@@ -15,7 +15,7 @@ const getSales = async (req, res) => {
 const createSale = async (req, res) => {
   const sale = req.body;
   const newSale = await salesServices.createSale(sale);
-  res.status(201).json(newSale);
+  return res.status(201).json(newSale);
 };
 
 const updateSale = async (req, res) => {
