@@ -12,10 +12,14 @@ const getSales = async (req, res) => {
     res.status(200).json(result);
 };
 
-const createSale = async (req, res) => {
-  const sale = req.body;
-  const newSale = await salesServices.createSale(sale);
-  return res.status(201).json(newSale);
+const createSale = async (req, res, next) => {
+  try {
+    const sale = req.body;
+    const newSale = await salesServices.createSale(sale);
+    return res.status(201).json(newSale);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const updateSale = async (req, res) => {
